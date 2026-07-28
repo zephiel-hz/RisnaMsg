@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import BubbleGallery from './BubbleGallery';
 
 interface LetterStageProps {
   onReplay: () => void;
@@ -8,6 +9,7 @@ interface LetterStageProps {
 export default function LetterStage({ onReplay }: LetterStageProps) {
   const [showEnvelope, setShowEnvelope] = useState(true);
   const [showLetter, setShowLetter] = useState(false);
+  const [showBubbles, setShowBubbles] = useState(false);
   const [confetti, setConfetti] = useState<Array<{ id: number; x: number; y: number; size: number; color: string; rotation: number; delay: number }>>([]);
   const [petals, setPetals] = useState<Array<{ id: number; x: number; delay: number; duration: number }>>([]);
 
@@ -157,6 +159,13 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
         )}
       </AnimatePresence>
 
+      {/* Bubble gallery overlay */}
+      <AnimatePresence>
+        {showBubbles && (
+          <BubbleGallery onClose={() => setShowBubbles(false)} />
+        )}
+      </AnimatePresence>
+
       {/* Letter card */}
       <AnimatePresence>
         {showLetter && (
@@ -235,20 +244,41 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
                 </div>
               </div>
 
-              {/* Wax seal at bottom */}
-              <div className="flex justify-center mt-8">
-                <div
-                  className="rounded-full flex items-center justify-center text-2xl"
+              {/* Wax seal stamp — clickable to open bubble gallery */}
+              <div className="flex flex-col items-center mt-8 gap-2">
+                <motion.button
+                  onClick={() => setShowBubbles(true)}
+                  animate={{ scale: [1, 1.08, 1] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.92 }}
                   style={{
-                    width: '60px',
-                    height: '60px',
-                    background: '#C97D7D',
-                    color: '#FDFAF6',
-                    boxShadow: '0 4px 12px rgba(201, 125, 125, 0.4)',
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 38% 36%, #E08080, #C97D7D)',
+                    border: '3px solid rgba(255,255,255,0.5)',
+                    boxShadow: '0 4px 16px rgba(201,125,125,0.45), inset 0 1px 3px rgba(255,255,255,0.3)',
+                    cursor: 'pointer',
+                    fontSize: 26,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    outline: 'none',
                   }}
                 >
                   🌸
-                </div>
+                </motion.button>
+                <p style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: 10,
+                  color: '#C97D7D',
+                  margin: 0,
+                  letterSpacing: '0.06em',
+                  opacity: 0.75,
+                }}>
+                  ketuk untuk kejutan ✨
+                </p>
               </div>
 
               {/* Decorative flower row */}

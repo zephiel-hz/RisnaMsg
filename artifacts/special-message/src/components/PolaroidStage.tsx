@@ -2,30 +2,79 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PolaroidCard, { PolaroidData } from './PolaroidCard';
 
-const CARD_HEIGHT_DESKTOP = 14 + (280 - 28) + 64; // 330px
-const CARD_HEIGHT_MOBILE  = 14 + (240 - 28) + 64; // 262px
+const CARD_HEIGHT_DESKTOP = 14 + (280 - 28) + 64;
+const CARD_HEIGHT_MOBILE  = 14 + (240 - 28) + 64;
 
 const polaroids: PolaroidData[] = [
   {
     id: 1,
-    image: 'https://picsum.photos/seed/abc1/400/400',
-    caption: 'Pertama kali kita ke sini! 🌸',
-    message: 'Hari itu terasa hangat banget.\nAku nggak mau melupakannya sama sekali. Terima kasih sudah ada di sana.',
+    image: 'https://picsum.photos/seed/mem1/400/400',
+    caption: 'Hari yang nggak akan kulupakan 🌸',
+    message: 'Waktu itu cuacanya sempurna. Kamu juga sempurna.',
     rotation: -5,
   },
   {
     id: 2,
-    image: 'https://picsum.photos/seed/abc2/400/400',
-    caption: 'Senyum paling manis sedunia ✨',
-    message: 'Senyummu itu... entah kenapa selalu bisa bikin hari terasa lebih baik. Jangan pernah berhenti senyum ya.',
+    image: 'https://picsum.photos/seed/mem2/400/400',
+    caption: 'Senyum paling tulus ✨',
+    message: 'Senyummu itu bisa bikin hari yang paling berat jadi ringan.',
     rotation: 4,
   },
   {
     id: 3,
-    image: 'https://picsum.photos/seed/abc3/400/400',
-    caption: 'Untuk Risna tersayang...',
-    message: 'Ada satu hal yang selalu ingin aku bilang: kamu berarti banget. Lebih dari yang kamu tahu. 💕',
+    image: 'https://picsum.photos/seed/mem3/400/400',
+    caption: 'Momen kecil yang berarti besar',
+    message: 'Hal-hal kecil seperti ini yang selalu kuingat tentangmu.',
+    rotation: -3,
+  },
+  {
+    id: 4,
+    image: 'https://picsum.photos/seed/mem4/400/400',
+    caption: 'Tertawa sampai lupa waktu 😄',
+    message: 'Tawa kita hari itu... nggak ada yang bisa menggantikannya.',
+    rotation: 6,
+  },
+  {
+    id: 5,
+    image: 'https://picsum.photos/seed/mem5/400/400',
+    caption: 'Sudut favorit kita 🌼',
+    message: 'Tempat ini jadi spesial karena kamu ada di sana.',
     rotation: -2,
+  },
+  {
+    id: 6,
+    image: 'https://picsum.photos/seed/mem6/400/400',
+    caption: 'Cahaya sore yang hangat',
+    message: 'Foto ini bikin aku ingat betapa beruntungnya aku punya kamu.',
+    rotation: 5,
+  },
+  {
+    id: 7,
+    image: 'https://picsum.photos/seed/mem7/400/400',
+    caption: 'Kamu dan duniamu 🌙',
+    message: 'Kamu selalu punya cara untuk membuat segalanya lebih indah.',
+    rotation: -6,
+  },
+  {
+    id: 8,
+    image: 'https://picsum.photos/seed/mem8/400/400',
+    caption: 'Ekspresi paling jujur',
+    message: 'Di antara semua foto, ini yang paling kusuka — karena ini kamu yang sesungguhnya.',
+    rotation: 3,
+  },
+  {
+    id: 9,
+    image: 'https://picsum.photos/seed/mem9/400/400',
+    caption: 'Bersama, selalu cukup 💕',
+    message: 'Nggak perlu ke mana-mana yang jauh — bersamamu saja sudah lebih dari cukup.',
+    rotation: -4,
+  },
+  {
+    id: 10,
+    image: 'https://picsum.photos/seed/mem10/400/400',
+    caption: 'Untuk Risna tersayang... 🌷',
+    message: 'Ada satu hal yang selalu ingin aku bilang: kamu berarti banget. Lebih dari yang kamu tahu. 💕',
+    rotation: 2,
   },
 ];
 
@@ -37,8 +86,8 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
   const [cards, setCards] = useState<PolaroidData[]>(polaroids);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
   const cardHeight = isMobile ? CARD_HEIGHT_MOBILE : CARD_HEIGHT_DESKTOP;
+  const total = polaroids.length;
 
-  // Floating petals
   const petals = Array.from({ length: 10 }, (_, i) => ({
     id: i,
     x: 5 + (i * 9) % 90,
@@ -47,7 +96,6 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
   }));
 
   const removeCard = (id: number) => {
-    // Burst particles from card center
     const origin = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     for (let i = 0; i < 8; i++) {
       const el = document.createElement('div');
@@ -57,7 +105,7 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
         top: `${origin.y}px`,
         left: `${origin.x}px`,
         fontSize: '16px',
-        color: i % 3 === 0 ? '#FFD1DC' : '#B0E0E6',
+        color: i % 3 === 0 ? '#FFB7C5' : '#FADA5E',
         pointerEvents: 'none',
         zIndex: '9999',
         transform: 'translate(-50%,-50%)',
@@ -89,7 +137,6 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
       exit={{ opacity: 0, scale: 0.96 }}
       className="min-h-[100dvh] w-full flex flex-col items-center justify-center px-4 relative"
     >
-      {/* Floating petals */}
       {petals.map((petal) => (
         <motion.div
           key={petal.id}
@@ -103,51 +150,35 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
             width: 8,
             height: 14,
             borderRadius: '50%',
-            background: petal.id % 2 === 0 ? '#FFD1DC' : '#B0E0E6',
+            background: petal.id % 2 === 0 ? '#FFB7C5' : '#FADA5E',
             pointerEvents: 'none',
           }}
         />
       ))}
 
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        style={{
-          fontFamily: "'Caveat', cursive",
-          fontSize: 26,
-          color: '#70665b',
-          marginBottom: 10,
-        }}
+        style={{ fontFamily: "'Caveat', cursive", fontSize: 26, color: '#70665b', marginBottom: 10 }}
       >
         Kenangan Kita 📸
       </motion.div>
 
-      {/* Counter */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.25 }}
-        style={{
-          fontFamily: "'Caveat', cursive",
-          fontSize: 18,
-          color: '#9a8d82',
-          marginBottom: 14,
-        }}
+        style={{ fontFamily: "'Caveat', cursive", fontSize: 18, color: '#9a8d82', marginBottom: 14 }}
       >
-        {remaining} / {polaroids.length}
+        {remaining} / {total}
       </motion.div>
 
-      {/* ── Stack container ──
-          Height is fixed to the card height + some room for the washi tape overflow.
-          Cards are absolutely positioned at top:50% left:50% inside this box,
-          so the centering wrapper in PolaroidCard always works correctly. */}
       <div
         style={{
           position: 'relative',
           width: isMobile ? 240 : 280,
-          height: cardHeight + 20, // +20 for washi tape overflow
+          height: cardHeight + 20,
           marginBottom: 20,
         }}
       >
@@ -164,22 +195,22 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
         </AnimatePresence>
       </div>
 
-      {/* Dot indicators */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-        {polaroids.map((_, i) => {
+      {/* Dot indicators — small for 10 */}
+      <div style={{ display: 'flex', gap: 5, marginBottom: 14, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 200 }}>
+        {Array.from({ length: total }, (_, i) => {
           const active = i < remaining;
           return (
             <motion.div
               key={i}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.3 + i * 0.08 }}
+              transition={{ delay: 0.3 + i * 0.04 }}
               style={{
-                width: active ? 10 : 8,
-                height: active ? 10 : 8,
+                width: active ? 8 : 6,
+                height: active ? 8 : 6,
                 borderRadius: '50%',
-                background: active ? '#FFD1DC' : '#d4c4b8',
-                opacity: active ? 1 : 0.45,
+                background: active ? '#FFB7C5' : '#d4c4b8',
+                opacity: active ? 1 : 0.4,
                 transition: 'all 0.3s',
               }}
             />
@@ -187,18 +218,11 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
         })}
       </div>
 
-      {/* Hint */}
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.55 }}
-        style={{
-          fontFamily: "'Poppins', sans-serif",
-          fontSize: 12,
-          color: '#9a8d82',
-          textAlign: 'center',
-          margin: 0,
-        }}
+        style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12, color: '#9a8d82', textAlign: 'center', margin: 0 }}
       >
         Ketuk untuk membalik · Geser untuk lanjut →
       </motion.p>
