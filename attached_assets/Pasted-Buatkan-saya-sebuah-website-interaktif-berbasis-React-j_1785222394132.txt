@@ -1,0 +1,35 @@
+Buatkan saya sebuah website interaktif berbasis React.js (menggunakan Vite) untuk memberikan ucapan spesial. Website ini harus memiliki desain yang bersih, minimalis, modern, namun menggemaskan dengan tema pastel. 
+
+Gunakan Framer Motion untuk animasinya dan Tailwind CSS atau CSS biasa untuk styling-nya. 
+
+Berikut adalah spesifikasi detailnya:
+
+1. TEMA & DESAIN VISUAL:
+- Warna Background Utama: Buttercream (#FFFDD0).
+- Tambahkan elemen background berupa bentuk geometris abstrak (seperti lingkaran besar dengan blur) berwarna Baby Blue (#B0E0E6) dan Soft Blossom (#FFD1DC) di sudut-sudut layar.
+- Font: Gunakan font dari Google Fonts. 'Poppins' untuk teks UI/umum, dan 'Caveat' untuk teks tulisan tangan di bawah foto.
+
+2. ALUR WEBSITE (USER FLOW):
+Website memiliki 3 tahap yang dirender secara dinamis dalam satu halaman (Single Page Application):
+
+- Tahap 1: Welcome Screen
+Layar bersih, hanya ada satu tombol melingkar (rounded-full) di tengah bertuliskan "Ada sesuatu buat kamu...". Jika diklik, akan lanjut ke Tahap 2.
+
+- Tahap 2: The Polaroid Stack (Tumpukan Kenangan)
+Tampilkan tumpukan foto bergaya polaroid di tengah layar.
+Desain Polaroid: Berbentuk kotak (rasio foto 1:1), border putih tebal di bawah untuk area teks, shadow halus (box-shadow: 0 10px 30px rgba(0,0,0,0.05)), foto di dalam frame, dan font 'Caveat' untuk caption.
+Interaksi: Polaroid ditumpuk dengan rotasi kemiringan yang sedikit berbeda-beda (misal -5 derajat, 3 derajat). User bisa mengklik atau men-swipe polaroid teratas. Saat di-swipe/diklik, polaroid tersebut akan terlempar keluar layar (animasi dengan Framer Motion) dan menampilkan polaroid di bawahnya.
+Setelah polaroid terakhir habis, transisi fade-out perlahan menuju Tahap 3.
+
+- Tahap 3: Final Letter (Surat Penutup)
+Tampilkan sebuah surat digital statis di tengah layar dengan font yang rapi. Berisi pesan teks yang sedikit panjang.
+
+3. DATA DUMMY:
+Buatkan array object sederhana di dalam kodenya untuk menampung data polaroid. Gunakan placeholder image dari internet (misalnya Unsplash atau Picsum) agar saya bisa menggantinya nanti. Contoh datanya:
+[
+  { id: 1, image: "https://picsum.photos/400/400?1", caption: "Pertama kali kita ke sini! 🌸", rotation: -5 },
+  { id: 2, image: "https://picsum.photos/400/400?2", caption: "Senyum paling manis sedunia ✨", rotation: 4 },
+  { id: 3, image: "https://picsum.photos/400/400?3", caption: "Untuk Risna tersayang...", rotation: -2 }
+]
+
+Mohon buatkan struktur komponen yang rapi dan pastikan website ini responsif di perangkat mobile. Tuliskan semua kodenya agar bisa langsung saya jalankan.
