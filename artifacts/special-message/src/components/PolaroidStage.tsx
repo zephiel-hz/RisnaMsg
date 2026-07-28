@@ -1,11 +1,32 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PolaroidCard from './PolaroidCard';
+import PolaroidCard, { PolaroidData } from './PolaroidCard';
 
-const polaroids = [
-  { id: 1, image: "https://picsum.photos/seed/abc1/400/400", caption: "Pertama kali kita ke sini! 🌸", rotation: -5 },
-  { id: 2, image: "https://picsum.photos/seed/abc2/400/400", caption: "Senyum paling manis sedunia ✨", rotation: 4 },
-  { id: 3, image: "https://picsum.photos/seed/abc3/400/400", caption: "Untuk Risna tersayang...", rotation: -2 },
+const CARD_HEIGHT_DESKTOP = 14 + (280 - 28) + 64; // 330px
+const CARD_HEIGHT_MOBILE  = 14 + (240 - 28) + 64; // 262px
+
+const polaroids: PolaroidData[] = [
+  {
+    id: 1,
+    image: 'https://picsum.photos/seed/abc1/400/400',
+    caption: 'Pertama kali kita ke sini! 🌸',
+    message: 'Hari itu terasa hangat banget.\nAku nggak mau melupakannya sama sekali. Terima kasih sudah ada di sana.',
+    rotation: -5,
+  },
+  {
+    id: 2,
+    image: 'https://picsum.photos/seed/abc2/400/400',
+    caption: 'Senyum paling manis sedunia ✨',
+    message: 'Senyummu itu... entah kenapa selalu bisa bikin hari terasa lebih baik. Jangan pernah berhenti senyum ya.',
+    rotation: 4,
+  },
+  {
+    id: 3,
+    image: 'https://picsum.photos/seed/abc3/400/400',
+    caption: 'Untuk Risna tersayang...',
+    message: 'Ada satu hal yang selalu ingin aku bilang: kamu berarti banget. Lebih dari yang kamu tahu. 💕',
+    rotation: -2,
+  },
 ];
 
 interface PolaroidStageProps {
@@ -13,98 +34,92 @@ interface PolaroidStageProps {
 }
 
 export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
-  const [cards, setCards] = useState(polaroids);
-  const [isPeeking, setIsPeeking] = useState(false);
+  const [cards, setCards] = useState<PolaroidData[]>(polaroids);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const cardHeight = isMobile ? CARD_HEIGHT_MOBILE : CARD_HEIGHT_DESKTOP;
+
+  // Floating petals
+  const petals = Array.from({ length: 10 }, (_, i) => ({
+    id: i,
+    x: 5 + (i * 9) % 90,
+    delay: (i * 0.7) % 5,
+    duration: 8 + (i * 1.3) % 6,
+  }));
 
   const removeCard = (id: number) => {
-    // Burst particles
-    const particles = Array.from({ length: 8 }, (_, i) => ({
-      id: `burst-${id}-${i}`,
-      x: (Math.random() - 0.5) * 200,
-      y: (Math.random() - 0.5) * 200,
-      delay: Math.random() * 0.1,
-    }));
-
-    // Show burst effect (using state would be cleaner but keeping it simple)
-    particles.forEach(particle => {
+    // Burst particles from card center
+    const origin = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    for (let i = 0; i < 8; i++) {
       const el = document.createElement('div');
-      el.style.position = 'fixed';
-      el.style.top = '50%';
-      el.style.left = '50%';
-      el.style.fontSize = '16px';
-      el.style.color = '#FFD1DC';
-      el.style.pointerEvents = 'none';
-      el.style.zIndex = '9999';
-      el.textContent = Math.random() > 0.5 ? '♥' : '✦';
+      el.textContent = i % 2 === 0 ? '♥' : '✦';
+      Object.assign(el.style, {
+        position: 'fixed',
+        top: `${origin.y}px`,
+        left: `${origin.x}px`,
+        fontSize: '16px',
+        color: i % 3 === 0 ? '#FFD1DC' : '#B0E0E6',
+        pointerEvents: 'none',
+        zIndex: '9999',
+        transform: 'translate(-50%,-50%)',
+      });
       document.body.appendChild(el);
-
+      const angle = (i / 8) * 2 * Math.PI;
+      const dist = 80 + Math.random() * 60;
       setTimeout(() => {
-        el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        el.style.transform = `translate(${particle.x}px, ${particle.y}px)`;
+        el.style.transition = 'all 0.7s cubic-bezier(0.25,0.46,0.45,0.94)';
+        el.style.transform = `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px))`;
         el.style.opacity = '0';
         setTimeout(() => el.remove(), 800);
-      }, particle.delay * 100);
-    });
+      }, 20);
+    }
 
-    setCards(prev => {
-      const newCards = prev.filter(card => card.id !== id);
-      if (newCards.length === 0) {
-        setTimeout(onComplete, 600);
-      }
-      return newCards;
+    setCards((prev) => {
+      const next = prev.filter((c) => c.id !== id);
+      if (next.length === 0) setTimeout(onComplete, 500);
+      return next;
     });
   };
 
-  // Floating petals specific to this stage
-  const petals = Array.from({ length: 10 }, (_, i) => ({
-    id: i,
-    x: 10 + Math.random() * 80,
-    delay: Math.random() * 5,
-    duration: 8 + Math.random() * 6,
-  }));
-
-  const currentCardNumber = cards.length;
+  const remaining = cards.length;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, scale: 0.96 }}
       className="min-h-[100dvh] w-full flex flex-col items-center justify-center px-4 relative"
     >
       {/* Floating petals */}
-      {petals.map(petal => (
+      {petals.map((petal) => (
         <motion.div
           key={petal.id}
-          initial={{ y: '100vh', opacity: 0, x: `${petal.x}vw` }}
-          animate={{ 
-            y: '-20vh',
-            opacity: [0, 0.4, 0.4, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: petal.duration,
-            delay: petal.delay,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute rounded-full"
+          initial={{ y: '100vh', opacity: 0 }}
+          animate={{ y: '-20vh', opacity: [0, 0.45, 0.45, 0], rotate: [0, 180, 360] }}
+          transition={{ duration: petal.duration, delay: petal.delay, repeat: Infinity, ease: 'linear' }}
           style={{
-            width: '8px',
-            height: '14px',
-            background: petal.id % 2 === 0 ? '#FFD1DC' : '#B0E0E6',
+            position: 'absolute',
+            left: `${petal.x}%`,
             bottom: 0,
-            left: 0,
+            width: 8,
+            height: 14,
+            borderRadius: '50%',
+            background: petal.id % 2 === 0 ? '#FFD1DC' : '#B0E0E6',
+            pointerEvents: 'none',
           }}
         />
       ))}
 
-      {/* Decorative header */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="font-caveat text-2xl md:text-3xl mb-8"
-        style={{ color: '#70665b' }}
+        transition={{ delay: 0.15 }}
+        style={{
+          fontFamily: "'Caveat', cursive",
+          fontSize: 26,
+          color: '#70665b',
+          marginBottom: 10,
+        }}
       >
         Kenangan Kita 📸
       </motion.div>
@@ -113,15 +128,29 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="font-caveat text-lg mb-4"
-        style={{ color: '#9a8d82' }}
+        transition={{ delay: 0.25 }}
+        style={{
+          fontFamily: "'Caveat', cursive",
+          fontSize: 18,
+          color: '#9a8d82',
+          marginBottom: 14,
+        }}
       >
-        {currentCardNumber} / 3
+        {remaining} / {polaroids.length}
       </motion.div>
 
-      {/* Polaroid stack */}
-      <div className="relative w-full max-w-sm h-96 mb-6">
+      {/* ── Stack container ──
+          Height is fixed to the card height + some room for the washi tape overflow.
+          Cards are absolutely positioned at top:50% left:50% inside this box,
+          so the centering wrapper in PolaroidCard always works correctly. */}
+      <div
+        style={{
+          position: 'relative',
+          width: isMobile ? 240 : 280,
+          height: cardHeight + 20, // +20 for washi tape overflow
+          marginBottom: 20,
+        }}
+      >
         <AnimatePresence>
           {cards.map((card, index) => (
             <PolaroidCard
@@ -129,41 +158,49 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
               card={card}
               isTop={index === cards.length - 1}
               onRemove={() => removeCard(card.id)}
-              onPeek={() => setIsPeeking(true)}
-              zIndex={index}
+              zIndex={index + 1}
             />
           ))}
         </AnimatePresence>
       </div>
 
       {/* Dot indicators */}
-      <div className="flex gap-2 mb-6">
-        {[1, 2, 3].map((num) => (
-          <motion.div
-            key={num}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3 + num * 0.1 }}
-            className="rounded-full transition-all duration-300"
-            style={{
-              width: currentCardNumber >= num ? '10px' : '8px',
-              height: currentCardNumber >= num ? '10px' : '8px',
-              background: currentCardNumber >= num ? '#FFD1DC' : '#d4c4b8',
-              opacity: currentCardNumber >= num ? 1 : 0.4,
-            }}
-          />
-        ))}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+        {polaroids.map((_, i) => {
+          const active = i < remaining;
+          return (
+            <motion.div
+              key={i}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3 + i * 0.08 }}
+              style={{
+                width: active ? 10 : 8,
+                height: active ? 10 : 8,
+                borderRadius: '50%',
+                background: active ? '#FFD1DC' : '#d4c4b8',
+                opacity: active ? 1 : 0.45,
+                transition: 'all 0.3s',
+              }}
+            />
+          );
+        })}
       </div>
 
-      {/* Hint text */}
+      {/* Hint */}
       <motion.p
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="text-sm"
-        style={{ color: '#9a8d82' }}
+        transition={{ delay: 0.55 }}
+        style={{
+          fontFamily: "'Poppins', sans-serif",
+          fontSize: 12,
+          color: '#9a8d82',
+          textAlign: 'center',
+          margin: 0,
+        }}
       >
-        Ketuk atau geser untuk melihat selanjutnya →
+        Ketuk untuk membalik · Geser untuk lanjut →
       </motion.p>
     </motion.div>
   );
