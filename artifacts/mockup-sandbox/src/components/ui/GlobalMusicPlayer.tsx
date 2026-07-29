@@ -230,8 +230,8 @@ function Player() {
             <button aria-label="next" style={{...iconBtnStyle(), ...hoverableButtonStyle('next')}} onMouseEnter={() => setHoveredControl('next')} onMouseLeave={() => setHoveredControl(null)} onClick={() => switchTrack(currentTrackIndex + 1)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l8 6-8 6V6z" fill="#b04b56"/><path d="M17 6h2v12h-2V6z" fill="#b04b56"/></svg>
             </button>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9v6h4l6 4V5l-6 4H5z" fill="#b04b56"/></svg>
-            </div>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', width: '100%', gap: 10}}>
             <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(e)=>{const v=Number(e.target.value); setVolume(v); if (audioRef.current) audioRef.current.volume=v;}} style={{flex: 1, WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', height: 8, borderRadius: 999, background: 'linear-gradient(90deg,#ffe066,#ffb86b)', outline: 'none', cursor: 'pointer', accentColor: '#b04b56'}} />
             <span style={{fontSize: 11, color: '#8a2f33', opacity: 0.8, minWidth: 38, textAlign: 'right'}}>{Math.round(volume * 100)}%</span>
           </div>
