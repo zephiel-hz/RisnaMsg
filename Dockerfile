@@ -4,6 +4,9 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# Install native build deps required by Vite/Rollup on Alpine.
+RUN apk add --no-cache python3 make g++
+
 COPY . .
 RUN pnpm install --frozen-lockfile
 

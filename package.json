@@ -18,6 +18,7 @@
     "@replit/connectors-sdk": "^0.4.1"
   },
   "devDependencies": {
+    "@rollup/rollup-linux-x64-musl": "^4.62.3",
     "@rollup/rollup-win32-x64-msvc": "^4.62.3",
     "@tailwindcss/oxide-win32-x64-msvc": "4.3.3",
     "concurrently": "^10.0.4",

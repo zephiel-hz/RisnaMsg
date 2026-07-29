@@ -161,6 +161,9 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1
     devDependencies:
+      '@rollup/rollup-linux-x64-musl':
+        specifier: ^4.62.3
+        version: 4.62.3
       '@rollup/rollup-win32-x64-msvc':
         specifier: ^4.62.3
         version: 4.62.3
@@ -1510,6 +1513,11 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [glibc]
+
+  '@rollup/rollup-linux-x64-musl@4.62.3':
+    resolution: {integrity: sha512-LBx9LYXvj2CBkMkjLdNAWLwH0MLMin7do2VcVo9kVPibGLkY0BQQut2fv7NVqkXqZ/CrAu9LqDHVV1xHCMpCPw==}
+    cpu: [x64]
+    os: [linux]
 
   '@rollup/rollup-win32-x64-msvc@4.62.3':
     resolution: {integrity: sha512-MOG/3gTOn4Fwf574RVOaY61I5o6P90legkFADiTyn1hyjNydT+cerU2rLUwPdZkKKyJ+iT+K9p7WXK4LM1Ka6g==}
@@ -4214,6 +4222,8 @@ snapshots:
 
   '@rollup/rollup-linux-x64-gnu@4.62.3':
     optional: true
+
+  '@rollup/rollup-linux-x64-musl@4.62.3': {}
 
   '@rollup/rollup-win32-x64-msvc@4.62.3': {}
 
