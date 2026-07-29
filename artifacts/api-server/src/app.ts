@@ -35,13 +35,16 @@ app.use(express.urlencoded({ extended: true }));
 // Mount API router first so API routes take precedence.
 app.use("/api", router);
 
-// If the frontend build exists at `artifacts/special-message/dist`, serve it at
-// the site root so the project root shows the web UI instead of redirecting
-// to the health endpoint. The path is resolved relative to the built `dist`
-// location of this package.
+// If the frontend build exists, serve it at the site root so the project root
+// shows the web UI instead of redirecting to the health endpoint.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const frontendDist = path.resolve(__dirname, "..", "..", "..", "special-message", "dist");
-if (existsSync(frontendDist)) {
+const frontendDistCandidates = [
+  path.resolve(__dirname, "..", "..", "special-message", "dist", "public"),
+  path.resolve(__dirname, "..", "..", "special-message", "dist"),
+];
+const frontendDist = frontendDistCandidates.find((candidate) => existsSync(candidate));
+
+if (frontendDist) {
   app.use(express.static(frontendDist));
   app.get("/", (_req, res) => {
     res.sendFile(path.resolve(frontendDist, "index.html"));
