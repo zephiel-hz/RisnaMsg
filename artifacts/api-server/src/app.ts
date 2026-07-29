@@ -39,6 +39,10 @@ app.use("/api", router);
 // shows the web UI instead of redirecting to the health endpoint.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const frontendDistCandidates = [
+  path.resolve(process.cwd(), "artifacts", "special-message", "dist", "public"),
+  path.resolve(process.cwd(), "artifacts", "special-message", "dist"),
+  path.resolve(process.cwd(), "special-message", "dist", "public"),
+  path.resolve(process.cwd(), "special-message", "dist"),
   path.resolve(__dirname, "..", "..", "special-message", "dist", "public"),
   path.resolve(__dirname, "..", "..", "special-message", "dist"),
   path.resolve(__dirname, "..", "..", "..", "artifacts", "special-message", "dist", "public"),
