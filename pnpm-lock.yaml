@@ -167,6 +167,9 @@ importers:
       '@rollup/rollup-win32-x64-msvc':
         specifier: ^4.62.3
         version: 4.62.3
+      '@tailwindcss/oxide-linux-x64-musl':
+        specifier: 4.3.3
+        version: 4.3.3
       '@tailwindcss/oxide-win32-x64-msvc':
         specifier: 4.3.3
         version: 4.3.3
@@ -1586,6 +1589,12 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [glibc]
+
+  '@tailwindcss/oxide-linux-x64-musl@4.3.3':
+    resolution: {integrity: sha512-SJxX60smvHgasZoBy11dX6YRjXJFovwWBoedhbQPOBzgFWBHGB+TVPWB9BxzR7TTxU8FQZAI2AyiNCMzFm8Img==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [linux]
 
   '@tailwindcss/oxide-wasm32-wasi@4.3.3':
     resolution: {integrity: sha512-jx1+rPhY/5Ympkktd656HBWEBLxP7dH06losBLjjf5vgCODXvi9KhtftWcMIwTFIDqBr7cRnQkdLnAG+IOlGvQ==}
@@ -4303,6 +4312,8 @@ snapshots:
 
   '@tailwindcss/oxide-linux-x64-gnu@4.3.3':
     optional: true
+
+  '@tailwindcss/oxide-linux-x64-musl@4.3.3': {}
 
   '@tailwindcss/oxide-wasm32-wasi@4.3.3':
     optional: true
