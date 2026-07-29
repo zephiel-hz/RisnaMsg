@@ -41,14 +41,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const frontendDistCandidates = [
   path.resolve(__dirname, "..", "..", "special-message", "dist", "public"),
   path.resolve(__dirname, "..", "..", "special-message", "dist"),
+  path.resolve(__dirname, "..", "..", "..", "artifacts", "special-message", "dist", "public"),
 ];
 const frontendDist = frontendDistCandidates.find((candidate) => existsSync(candidate));
+const frontendIndexHtml = frontendDist ? path.resolve(frontendDist, "index.html") : null;
 
-if (frontendDist) {
-  app.use(express.static(frontendDist));
-  app.get("/", (_req, res) => {
-    res.sendFile(path.resolve(frontendDist, "index.html"));
+if (frontendIndexHtml && existsSync(frontendIndexHtml)) {
+  app.get(["/", "/index.html"], (_req, res) => {
+    res.sendFile(frontendIndexHtml);
   });
+  app.use(express.static(frontendDist!));
 }
 
 export default app;
