@@ -10,4 +10,7 @@ RUN pnpm install --frozen-lockfile
 # Build all workspaces
 RUN pnpm -w run build
 
+# Copy the built frontend into a fixed location that the API server can serve.
+RUN mkdir -p /app/public && cp -R /app/artifacts/special-message/dist/public/. /app/public/
+
 CMD ["pnpm", "--filter", "./artifacts/api-server", "start"]
