@@ -11,5 +11,14 @@
         "PORT": "3000"
       }
     }
+    ,
+    {
+      "name": "web",
+      "startCommand": "pnpm --filter ./artifacts/special-message serve",
+      "path": "./artifacts/special-message",
+      "env": {
+        "PORT": "3001"
+      }
+    }
   ]
 }
