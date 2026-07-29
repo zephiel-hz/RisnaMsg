@@ -99,7 +99,7 @@ export default function WelcomeStage({ onComplete }: WelcomeStageProps) {
         className="font-caveat text-xl md:text-2xl mb-12"
         style={{ color: '#70665b' }}
       >
-        🌸 Sebuah kejutan untukmu
+        🌸 Ada kejutan nih buat kamu
       </motion.div>
 
       {/* Main button with rings and orbiting sparkles */}
@@ -186,7 +186,7 @@ export default function WelcomeStage({ onComplete }: WelcomeStageProps) {
           data-testid="button-welcome"
         >
           <span className="text-lg md:text-xl font-medium px-8 leading-relaxed" style={{ color: '#3d3229' }}>
-            Ada sesuatu<br />buat kamu...
+            Portal
           </span>
         </motion.button>
       </div>
@@ -199,7 +199,7 @@ export default function WelcomeStage({ onComplete }: WelcomeStageProps) {
         className="font-light text-xs md:text-sm"
         style={{ color: '#9a8d82' }}
       >
-        ( ketuk untuk membuka )
+        ( ketuk portal untuk membuka )
       </motion.div>
     </motion.div>
   );

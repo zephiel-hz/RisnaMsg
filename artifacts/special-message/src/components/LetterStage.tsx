@@ -198,7 +198,7 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
                     color: '#70665b',
                   }}
                 >
-                  ✉ Surat Untukmu
+                  ✉ Surat Untuk Risna
                 </div>
               </div>
 
@@ -206,30 +206,34 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
               <div className="absolute top-4 right-4 text-2xl opacity-20">🌸</div>
               <div className="absolute top-6 left-12 text-xl opacity-15">🌼</div>
 
-              {/* Letter content */}
+              {/* Letter content (casual, grateful, praising) */}
               <div className="space-y-5 text-base leading-relaxed" style={{ color: '#3d3229' }}>
                 <p className="font-medium">
-                  <span className="text-4xl font-semibold float-left mr-2 leading-none" style={{ color: '#8B7355' }}>U</span>
-                  ntuk kamu yang sedang membaca ini,
-                </p>
-                
-                <p>
-                  Terima kasih sudah ada. Terima kasih sudah menjadi bagian dari hari-hari yang terasa lebih ringan ketika kamu ada di dalamnya.
-                </p>
-                
-                <p>
-                  Ada banyak hal yang ingin kuucapkan, tapi kadang kata-kata terasa terlalu kecil untuk isi hati yang terlalu penuh.
-                </p>
-                
-                <p>
-                  Jadi biarkan foto-foto itu yang berbicara — setiap momen adalah bukti bahwa waktu bersamamu adalah hadiah.
-                </p>
-                
-                <p>
-                  Semoga kamu tahu, betapapun jauhnya jarak atau sibuknya hari, kamu selalu ada di pikiran.
+                  <span className="text-4xl font-semibold float-left mr-2 leading-none" style={{ color: '#8B7355' }}>H</span>
+                  ai kamu—iya, kamu yang lagi baca ini,
                 </p>
 
-                {/* Signature area */}
+                <p>
+                  Makasih ya, kamu udah selalu hadir dan perhatian sama aku. Serius, sifat kamu yang perhatian, sabar, dan gampang bikin orang nyaman itu nggak gampang ditemuin.
+                </p>
+
+                <p>
+                  Aku suka gimana kamu bisa bikin hari yang tadinya buruk jadi agak mendingan cuma dengan senyum atau pesan singkat. Hal-hal kecil itu rasanya besar banget buat aku.
+                </p>
+
+                <p>
+                  Aku bener-bener bersyukur karena kamu — bukan cuma karena apa yang kamu lakuin, tapi karena siapa kamu. Kamu itu cantik, hangat, imut, lucu, keren, baik, perhatian, dan masih banyak lagi. Kalo disebutin semua kayaknya kepanjangan. Hehe.
+                </p>
+
+                <p>
+                  Semoga kamu ngerasa dihargai dan dicintai, karena aku selalu inget kebaikan dan perhatian yang kamu beri. Makasih udah ada di hidupku, yaaa.
+                </p>
+
+                <p>
+                  I Love You, Risna. 💕
+                </p>
+
+                {/* Signature area (kept casual) */}
                 <div className="pt-8 mt-8 border-t" style={{ borderColor: '#e8ddd0' }}>
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-px" style={{ background: '#d4c4b8' }} />
@@ -237,8 +241,8 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
                     <div className="w-12 h-px" style={{ background: '#d4c4b8' }} />
                   </div>
                   <p className="font-caveat text-center text-xl md:text-2xl">
-                    Dengan sepenuh hati,<br />
-                    Seseorang yang peduli 
+                    Peluk hangat,<br />
+                    Dari orang yang sayang banget sama kamu
                     <span className="ml-2" style={{ color: '#FF6B9D' }}>♥</span>
                   </p>
                 </div>

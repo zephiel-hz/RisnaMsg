@@ -4,6 +4,7 @@ import BackgroundLayer from './components/BackgroundLayer';
 import WelcomeStage from './components/WelcomeStage';
 import PolaroidStage from './components/PolaroidStage';
 import LetterStage from './components/LetterStage';
+import GlobalMusicPlayer from './components/ui/GlobalMusicPlayer';
 
 type Stage = 'welcome' | 'polaroids' | 'letter';
 
@@ -44,6 +45,8 @@ function App() {
           )}
         </AnimatePresence>
       </div>
+
+      {stage !== 'welcome' ? <GlobalMusicPlayer /> : null}
     </div>
   );
 }

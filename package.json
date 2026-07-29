@@ -3,16 +3,27 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "preinstall": "node -e \"try{require('fs').unlinkSync('package-lock.json')}catch(e){}; try{require('fs').unlinkSync('yarn.lock')}catch(e){}; if(!process.env.npm_config_user_agent || !process.env.npm_config_user_agent.startsWith('pnpm/')){console.error('Use pnpm instead'); process.exit(1)}\"",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "dev:api": "cross-env PORT=3000 pnpm --filter ./artifacts/api-server dev",
+    "dev:mockup": "cross-env PORT=3001 BASE_PATH=/ pnpm --filter ./artifacts/mockup-sandbox dev",
+    "dev:special": "cross-env PORT=3002 BASE_PATH=/ pnpm --filter ./artifacts/special-message dev",
+    "dev": "pnpm exec concurrently --kill-others \"cross-env PORT=3000 pnpm --filter ./artifacts/api-server dev\" \"cross-env PORT=3001 BASE_PATH=/ pnpm --filter ./artifacts/mockup-sandbox dev\" \"cross-env PORT=3002 BASE_PATH=/ pnpm --filter ./artifacts/special-message dev\"",
+    "start": "pnpm -w -r --if-present run start"
   },
   "private": true,
   "dependencies": {
     "@replit/connectors-sdk": "^0.4.1"
   },
   "devDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.62.3",
+    "@tailwindcss/oxide-win32-x64-msvc": "4.3.3",
+    "concurrently": "^10.0.4",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.0.0",
+    "lightningcss-win32-x64-msvc": "^1.33.0",
     "prettier": "^3.9.6",
     "typescript": "~5.9.3"
   }

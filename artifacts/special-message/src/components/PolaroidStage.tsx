@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PolaroidCard, { PolaroidData } from './PolaroidCard';
+import polaroid1 from '../assets/polaroid1.jpeg';
+import polaroid2 from '../assets/polaroid2.jpeg';
+import polaroid3 from '../assets/polaroid3.jpeg';
+import polaroid4 from '../assets/polaroid4.jpeg';
+import polaroid5 from '../assets/polaroid5.jpeg';
+import polaroid6 from '../assets/polaroid6.jpeg';
+import polaroid7 from '../assets/polaroid7.jpeg';
+import polaroid8 from '../assets/polaroid8.jpeg';
+import polaroid9 from '../assets/polaroid9.jpeg';
+import polaroid10 from '../assets/polaroid10.jpeg';
 
 const CARD_HEIGHT_DESKTOP = 14 + (280 - 28) + 64;
 const CARD_HEIGHT_MOBILE  = 14 + (240 - 28) + 64;
@@ -8,72 +18,72 @@ const CARD_HEIGHT_MOBILE  = 14 + (240 - 28) + 64;
 const polaroids: PolaroidData[] = [
   {
     id: 1,
-    image: 'https://picsum.photos/seed/mem1/400/400',
-    caption: 'Hari yang nggak akan kulupakan 🌸',
-    message: 'Waktu itu cuacanya sempurna. Kamu juga sempurna.',
+    image: polaroid1,
+    caption: 'Kamu selalu bikin aku semangat 🌸',
+    message: 'Entah kenapa, kamu tuh selalu bisa bikin hari jadi lebih asik dan enggak ngebosenin.',
     rotation: -5,
   },
   {
     id: 2,
-    image: 'https://picsum.photos/seed/mem2/400/400',
-    caption: 'Senyum paling tulus ✨',
-    message: 'Senyummu itu bisa bikin hari yang paling berat jadi ringan.',
+    image: polaroid2,
+    caption: 'Senyummu tuh juara ✨',
+    message: 'Kalo liat kamu senyum, rasanya semua hal jadi lebih ringan.',
     rotation: 4,
   },
   {
     id: 3,
-    image: 'https://picsum.photos/seed/mem3/400/400',
-    caption: 'Momen kecil yang berarti besar',
-    message: 'Hal-hal kecil seperti ini yang selalu kuingat tentangmu.',
+    image: polaroid3,
+    caption: 'Sikapmu tuh bikin nyaman',
+    message: 'Kamu itu hangat, ramah, dan bener-bener bikin aku ngerasa selalu ditemenin.',
     rotation: -3,
   },
   {
     id: 4,
-    image: 'https://picsum.photos/seed/mem4/400/400',
-    caption: 'Tertawa sampai lupa waktu 😄',
-    message: 'Tawa kita hari itu... nggak ada yang bisa menggantikannya.',
+    image: polaroid4,
+    caption: 'Gayamu keren banget 😄',
+    message: 'Cara kamu tampil dan bertindak, itu serius banget bikin aku impressed.',
     rotation: 6,
   },
   {
     id: 5,
-    image: 'https://picsum.photos/seed/mem5/400/400',
-    caption: 'Sudut favorit kita 🌼',
-    message: 'Tempat ini jadi spesial karena kamu ada di sana.',
+    image: polaroid5,
+    caption: 'Kamu itu care banget',
+    message: 'Aku suka banget sama perhatian yang kamu kasih ke aku, itu bikin aku ngerasa dihargai.',
     rotation: -2,
   },
   {
     id: 6,
-    image: 'https://picsum.photos/seed/mem6/400/400',
-    caption: 'Cahaya sore yang hangat',
-    message: 'Foto ini bikin aku ingat betapa beruntungnya aku punya kamu.',
+    image: polaroid6,
+    caption: 'Kuat tapi tetap lembut',
+    message: 'Dua hal ini jarang banget bisa nyatu, tapi ternyata kedua hal itu ada di kamu.',
     rotation: 5,
   },
   {
     id: 7,
-    image: 'https://picsum.photos/seed/mem7/400/400',
-    caption: 'Kamu dan duniamu 🌙',
-    message: 'Kamu selalu punya cara untuk membuat segalanya lebih indah.',
+    image: polaroid7,
+    caption: 'Kamu bikin suasana cerah 🌙',
+    message: 'Kalau ada kamu, suasana langsung berasa lebih baik.',
     rotation: -6,
   },
   {
     id: 8,
-    image: 'https://picsum.photos/seed/mem8/400/400',
-    caption: 'Ekspresi paling jujur',
-    message: 'Di antara semua foto, ini yang paling kusuka — karena ini kamu yang sesungguhnya.',
+    image: polaroid8,
+    caption: 'Kamu itu luar biasa, serius deh',
+    message: 'Jujur dan simpel, kamu itu bikin segalanya terasa nyata.',
     rotation: 3,
   },
   {
     id: 9,
-    image: 'https://picsum.photos/seed/mem9/400/400',
-    caption: 'Bersama, selalu cukup 💕',
-    message: 'Nggak perlu ke mana-mana yang jauh — bersamamu saja sudah lebih dari cukup.',
+    image: polaroid9,
+    caption: 'Kamu udah cukup banget 💕',
+    message: 'Nggak usah repot-repot berubah, kamu udah oke apa adanya.',
     rotation: -4,
   },
   {
     id: 10,
-    image: 'https://picsum.photos/seed/mem10/400/400',
-    caption: 'Untuk Risna tersayang... 🌷',
-    message: 'Ada satu hal yang selalu ingin aku bilang: kamu berarti banget. Lebih dari yang kamu tahu. 💕',
+    image: polaroid10,
+    caption: 'Nah, ini buat kamu 🌷',
+    message: 'Makasih ya, Sayang. Udah selalu ngerawat bunga yang aku kasih.',
     rotation: 2,
   },
 ];
@@ -162,7 +172,7 @@ export default function PolaroidStage({ onComplete }: PolaroidStageProps) {
         transition={{ delay: 0.15 }}
         style={{ fontFamily: "'Caveat', cursive", fontSize: 26, color: '#70665b', marginBottom: 10 }}
       >
-        Kenangan Kita 📸
+        Untuk Sayangku, Risna 💝
       </motion.div>
 
       <motion.div

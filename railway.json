@@ -1,0 +1,15 @@
+{
+  "project": {
+    "name": "RisnaScrapbook"
+  },
+  "services": [
+    {
+      "name": "api-server",
+      "startCommand": "pnpm --filter ./artifacts/api-server start",
+      "path": "./artifacts/api-server",
+      "env": {
+        "PORT": "3000"
+      }
+    }
+  ]
+}

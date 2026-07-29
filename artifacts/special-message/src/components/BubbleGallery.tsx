@@ -1,29 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-interface Bubble {
+interface SpawnedBubble {
   id: number;
-  image: string;
   word: string;
   x: number; // percent from left
-  y: number; // percent from top
-  size: number; // px diameter
-  floatDelay: number;
-  floatDuration: number;
-  enterDelay: number;
+  size: number; // px
+  duration: number; // seconds to travel
 }
 
-const bubbleData: Bubble[] = [
-  { id: 1,  image: 'https://picsum.photos/seed/b1/200/200',  word: 'kamu cantik ✨',         x: 10, y: 12, size: 110, floatDelay: 0,    floatDuration: 3.8, enterDelay: 0.05 },
-  { id: 2,  image: 'https://picsum.photos/seed/b2/200/200',  word: 'selalu ada untukmu 💕',  x: 35, y: 6,  size: 95,  floatDelay: 0.4,  floatDuration: 4.2, enterDelay: 0.15 },
-  { id: 3,  image: 'https://picsum.photos/seed/b3/200/200',  word: 'kamu spesial 🌸',         x: 62, y: 10, size: 120, floatDelay: 0.8,  floatDuration: 3.5, enterDelay: 0.1  },
-  { id: 4,  image: 'https://picsum.photos/seed/b4/200/200',  word: 'terima kasih 🙏',         x: 82, y: 18, size: 90,  floatDelay: 1.1,  floatDuration: 4.6, enterDelay: 0.2  },
-  { id: 5,  image: 'https://picsum.photos/seed/b5/200/200',  word: 'kamu luar biasa 🌟',      x: 6,  y: 42, size: 100, floatDelay: 0.6,  floatDuration: 4.0, enterDelay: 0.25 },
-  { id: 6,  image: 'https://picsum.photos/seed/b6/200/200',  word: 'selalu kusayang ♡',       x: 28, y: 50, size: 115, floatDelay: 1.4,  floatDuration: 3.7, enterDelay: 0.3  },
-  { id: 7,  image: 'https://picsum.photos/seed/b7/200/200',  word: 'kamu berharga 💎',        x: 55, y: 44, size: 95,  floatDelay: 0.2,  floatDuration: 4.3, enterDelay: 0.18 },
-  { id: 8,  image: 'https://picsum.photos/seed/b8/200/200',  word: 'jangan pernah berubah 🌼', x: 78, y: 50, size: 105, floatDelay: 0.9,  floatDuration: 3.9, enterDelay: 0.35 },
-  { id: 9,  image: 'https://picsum.photos/seed/b9/200/200',  word: 'kehadiranmu berarti 🌷',  x: 18, y: 75, size: 90,  floatDelay: 1.6,  floatDuration: 4.5, enterDelay: 0.4  },
-  { id: 10, image: 'https://picsum.photos/seed/b10/200/200', word: 'aku bersyukur 🍀',        x: 45, y: 72, size: 120, floatDelay: 0.5,  floatDuration: 3.6, enterDelay: 0.22 },
+const wordsPool: string[] = [
+  'kamu cantik ✨',
+  'selalu ada untukmu 💕',
+  'kamu spesial 🌸',
+  'terima kasih sayang 🥰',
+  'kamu luar biasa 🌟',
+  'selalu kusayang ❤️',
+  'kamu berharga 💎',
+  'jangan pernah berubah 🌼',
+  'kehadiranmu berarti 🌷',
+  'aku bersyukur punya kamu 🍀',
+  'hatiku milikmu ❤️',
+  'senyummu penyemangatku 😊',
+  'rinduku tak pernah berhenti 🌙',
+  'kamu membuat hariku indah ☀️',
+  'aku sayang kamu sekarang & selamanya 💞',
+  'suaramu obat terbaik 🤗',
+  'kamu tujuan hidupku ✨',
+  'bersamamu terasa lengkap 🌹',
+  'kamu cahaya di gelapku 🕯️',
+  'terima kasih sudah pilih aku 💐',
+  'selalu dukung mimpi-mimpimu ✨',
+  'kau membuatku tersenyum tiap hari 😊',
+  'hangat suaramu menenangkan 😙',
+  'aku percaya padamu selalu 🌟',
 ];
 
 interface BubbleGalleryProps {
@@ -31,21 +40,49 @@ interface BubbleGalleryProps {
 }
 
 export default function BubbleGallery({ onClose }: BubbleGalleryProps) {
-  const [popped, setPopped] = useState<Set<number>>(new Set());
+  const [active, setActive] = useState<SpawnedBubble[]>([]);
+  const idRef = useRef(1);
+  const spawnIntervalRef = useRef<number | null>(null);
+  
 
-  const pop = (id: number) => {
-    setPopped((prev) => {
-      const next = new Set(prev);
-      next.add(id);
-      // If all popped, close after a short delay
-      if (next.size === bubbleData.length) {
-        setTimeout(onClose, 800);
-      }
-      return next;
-    });
-  };
+  useEffect(() => {
+    // initial burst to fill scene
+    for (let i = 0; i < 8; i++) {
+      const word = wordsPool[Math.floor(Math.random() * wordsPool.length)];
+      const b: SpawnedBubble = {
+        id: idRef.current++,
+        word,
+        x: 5 + Math.random() * 90,
+        size: 60 + Math.random() * 100,
+        duration: 10 + Math.random() * 10, // 10-20s
+      };
+      setActive((prev) => [...prev, b]);
+    }
 
-  const remaining = bubbleData.length - popped.size;
+    // spawn bubbles continuously (more frequent)
+    spawnIntervalRef.current = window.setInterval(() => {
+      const word = wordsPool[Math.floor(Math.random() * wordsPool.length)];
+      const b: SpawnedBubble = {
+        id: idRef.current++,
+        word,
+        x: 5 + Math.random() * 90,
+        size: 60 + Math.random() * 100,
+        duration: 10 + Math.random() * 10, // 10-20s
+      };
+      setActive((prev) => {
+        const next = [...prev, b];
+        // limit max active bubbles to avoid DOM overload
+        if (next.length > 120) next.shift();
+        return next;
+      });
+    }, 400);
+
+    return () => {
+      if (spawnIntervalRef.current) clearInterval(spawnIntervalRef.current);
+    };
+  }, []);
+
+  const remove = (id: number) => setActive((prev) => prev.filter((p) => p.id !== id));
 
   return (
     <motion.div
@@ -57,14 +94,10 @@ export default function BubbleGallery({ onClose }: BubbleGalleryProps) {
         position: 'fixed',
         inset: 0,
         zIndex: 100,
-        background: 'rgba(255,240,245,0.82)',
+        background: 'rgba(255,240,245,0.92)',
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
         overflow: 'hidden',
-      }}
-      onClick={(e) => {
-        // Close if clicking the backdrop itself
-        if (e.target === e.currentTarget) onClose();
       }}
     >
       {/* Close button */}
@@ -96,151 +129,85 @@ export default function BubbleGallery({ onClose }: BubbleGalleryProps) {
         ×
       </motion.button>
 
-      {/* Counter */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        style={{
-          position: 'absolute',
-          top: 24,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontFamily: "'Caveat', cursive",
-          fontSize: 18,
-          color: '#C97D7D',
-          zIndex: 101,
-          pointerEvents: 'none',
-        }}
-      >
-        {remaining > 0
-          ? `${remaining} kenangan tersisa... ketuk untuk membuka ✨`
-          : 'semua kenangan telah terbuka 🌸'}
-      </motion.div>
+      {/* counter removed per user request */}
 
-      {/* Bubbles */}
+      {/* Bubbles (spawned from bottom -> top) */}
       <AnimatePresence>
-        {bubbleData.map((bubble) =>
-          popped.has(bubble.id) ? null : (
-            <FloatingBubble
-              key={bubble.id}
-              bubble={bubble}
-              onPop={() => pop(bubble.id)}
-            />
-          )
-        )}
+        {active.map((b) => (
+          <FloatingBubble key={b.id} bubble={b} onComplete={() => remove(b.id)} />
+        ))}
       </AnimatePresence>
+
+      {/* Global music player moved to a shared module */}
     </motion.div>
   );
 }
 
-function FloatingBubble({ bubble, onPop }: { bubble: Bubble; onPop: () => void }) {
+function FloatingBubble({ bubble, onComplete }: { bubble: SpawnedBubble; onComplete: () => void }) {
   const [isPopping, setIsPopping] = useState(false);
+  const popRotationRef = useRef((Math.random() - 0.5) * 60);
 
   const handleClick = () => {
     if (isPopping) return;
     setIsPopping(true);
-    // Spawn pop particles
-    spawnPopParticles(bubble.x, bubble.y);
-    setTimeout(onPop, 280);
+    spawnPopParticles(bubble.x, 95); // approximate y near bottom
+    setTimeout(onComplete, 380);
   };
+
+  // travel distance (px)
+  const travel = typeof window !== 'undefined' ? window.innerHeight + 300 : 1000;
 
   return (
     <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={
-        isPopping
-          ? { scale: 1.4, opacity: 0 }
-          : {
-              scale: 1,
-              opacity: 1,
-              y: [0, -10, 0],
-            }
-      }
-      exit={{ scale: 1.4, opacity: 0 }}
-      transition={
-        isPopping
-          ? { duration: 0.28, ease: 'easeOut' }
-          : {
-              scale: { duration: 0.5, delay: bubble.enterDelay, ease: [0.175, 0.885, 0.32, 1.275] },
-              opacity: { duration: 0.4, delay: bubble.enterDelay },
-              y: {
-                duration: bubble.floatDuration,
-                delay: bubble.floatDelay,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              },
-            }
-      }
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       onClick={handleClick}
       style={{
         position: 'absolute',
         left: `${bubble.x}%`,
-        top: `${bubble.y}%`,
-        width: bubble.size,
+        bottom: -Math.max(20, bubble.size / 2),
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 8,
         userSelect: 'none',
+        zIndex: 100,
+        pointerEvents: 'auto',
       }}
     >
-      {/* Sweet word tag above */}
+      {/* Floating group: bubble circle + tag */}
       <motion.div
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: bubble.enterDelay + 0.2 }}
-        style={{
-          background: '#fff',
-          borderRadius: 20,
-          padding: '3px 10px',
-          fontFamily: "'Caveat', cursive",
-          fontSize: 13,
-          color: '#C97D7D',
-          boxShadow: '0 2px 8px rgba(201,125,125,0.2)',
-          whiteSpace: 'nowrap',
-          border: '1px solid rgba(255,183,197,0.4)',
+        initial={{ translateY: 0, opacity: 0 }}
+        animate={isPopping ? { scale: [1, 1.4, 0], opacity: 0, rotate: popRotationRef.current } : { translateY: -travel, opacity: 1 }}
+        transition={isPopping ? { times: [0, 0.45, 1], duration: 0.38, ease: 'easeOut' } : { duration: bubble.duration, ease: 'linear' }}
+        onAnimationComplete={() => {
+          if (!isPopping) onComplete();
         }}
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
       >
-        {bubble.word}
-      </motion.div>
-
-      {/* Circular photo bubble */}
-      <div
-        style={{
-          width: bubble.size,
-          height: bubble.size,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          border: '4px solid #fff',
-          boxShadow: '0 6px 24px rgba(201,125,125,0.22), 0 1px 4px rgba(0,0,0,0.08)',
-          background: '#f5e6ea',
-          position: 'relative',
-        }}
-      >
-        <img
-          src={bubble.image}
-          alt={bubble.word}
-          draggable={false}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-        />
-        {/* Subtle highlight gloss */}
-        <div
+        {/* Sweet word tag (no bubble circle) */}
+        <motion.div
+          initial={{ opacity: 0.9, y: 8 }}
+          animate={isPopping ? { scale: 0.7, opacity: 0, rotate: popRotationRef.current } : { opacity: 1, y: 0 }}
+          transition={isPopping ? { duration: 0.28, ease: 'easeOut' } : { delay: 0 }}
           style={{
-            position: 'absolute',
-            top: 6,
-            left: 8,
-            width: '40%',
-            height: '30%',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.3)',
-            filter: 'blur(4px)',
-            transform: 'rotate(-20deg)',
-            pointerEvents: 'none',
+            background: 'rgba(255,255,255,0.98)',
+            borderRadius: 22,
+            padding: '8px 14px',
+            fontFamily: "'Caveat', cursive",
+            fontSize: Math.max(13, bubble.size * 0.13),
+            color: '#b04b56',
+            boxShadow: '0 6px 18px rgba(176,75,86,0.14)',
+            whiteSpace: 'nowrap',
+            border: '1px solid rgba(176,75,86,0.12)',
+            transformOrigin: 'center',
           }}
-        />
-      </div>
+        >
+          {bubble.word}
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -276,4 +243,11 @@ function spawnPopParticles(xPct: number, yPct: number) {
       setTimeout(() => el.remove(), 700);
     }, 10);
   }
+}
+
+function formatTime(t: number) {
+  if (!t || isNaN(t)) return '0:00';
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
 }
