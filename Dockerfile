@@ -10,4 +10,4 @@ RUN pnpm install --frozen-lockfile
 # Build all workspaces
 RUN pnpm -w run build
 
-CMD ["pnpm", "-w", "run", "start"]
+CMD ["pnpm", "--filter", "./artifacts/api-server", "start"]
