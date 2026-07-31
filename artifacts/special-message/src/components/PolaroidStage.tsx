@@ -26,7 +26,7 @@ const polaroids: PolaroidData[] = [
   {
     id: 2,
     image: polaroid2,
-    caption: 'Senyummu tuh juara ✨',
+    caption: 'Senyummu tuh the best ✨',
     message: 'Kalo liat kamu senyum, rasanya semua hal jadi lebih ringan.',
     rotation: 4,
   },
@@ -41,7 +41,7 @@ const polaroids: PolaroidData[] = [
     id: 4,
     image: polaroid4,
     caption: 'Gayamu keren banget 😄',
-    message: 'Cara kamu tampil dan bertindak, itu serius banget bikin aku impressed.',
+    message: 'Aku suka banget sama penampilan kamu setiap harinya, seriusan.',
     rotation: 6,
   },
   {
@@ -55,13 +55,13 @@ const polaroids: PolaroidData[] = [
     id: 6,
     image: polaroid6,
     caption: 'Kuat tapi tetap lembut',
-    message: 'Dua hal ini jarang banget bisa nyatu, tapi ternyata kedua hal itu ada di kamu.',
+    message: 'Dua hal ini jarang banget bisa nyatu, tapi ternyata kamu punya keduanya.',
     rotation: 5,
   },
   {
     id: 7,
     image: polaroid7,
-    caption: 'Kamu bikin suasana cerah 🌙',
+    caption: 'Kamu bikin suasana cerah',
     message: 'Kalau ada kamu, suasana langsung berasa lebih baik.',
     rotation: -6,
   },

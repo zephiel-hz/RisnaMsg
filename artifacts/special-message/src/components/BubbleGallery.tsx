@@ -6,76 +6,203 @@ interface SpawnedBubble {
   x: number; // percent from left
   size: number; // px
   duration: number; // seconds to travel
+  fontSize?: number; // px
+}
+
+interface BubbleSettings {
+  initialBurst: number;
+  intervalMs: number;
+  maxActive: number;
+  sizeMin: number;
+  sizeMax: number;
+  durationMin: number;
+  durationMax: number;
 }
 
 const wordsPool: string[] = [
-  'kamu cantik ✨',
-  'selalu ada untukmu 💕',
-  'kamu spesial 🌸',
-  'terima kasih sayang 🥰',
-  'kamu luar biasa 🌟',
-  'selalu kusayang ❤️',
-  'kamu berharga 💎',
-  'jangan pernah berubah 🌼',
-  'kehadiranmu berarti 🌷',
-  'aku bersyukur punya kamu 🍀',
-  'hatiku milikmu ❤️',
-  'senyummu penyemangatku 😊',
-  'rinduku tak pernah berhenti 🌙',
-  'kamu membuat hariku indah ☀️',
-  'aku sayang kamu sekarang & selamanya 💞',
-  'suaramu obat terbaik 🤗',
-  'kamu tujuan hidupku ✨',
-  'bersamamu terasa lengkap 🌹',
-  'kamu cahaya di gelapku 🕯️',
-  'terima kasih sudah pilih aku 💐',
-  'selalu dukung mimpi-mimpimu ✨',
-  'kau membuatku tersenyum tiap hari 😊',
-  'hangat suaramu menenangkan 😙',
-  'aku percaya padamu selalu 🌟',
+  'kamu tuh selalu nyuri perhatian aku',
+  'sayang, kamu manis banget sih',
+  'aku nggak bisa berhenti mikirin kamu',
+  'kamu bener-bener bikin hari aku cerah',
+  'kamu tuh bikin nyaman banget',
+  'kamu kayak magnet bikin aku tertarik',
+  'eh, kamu imutnya kebangetan sih',
+  'kamu tuh alasan senyum aku hari ini',
+  'aku kangen deh',
+  'suaramu bikin aku adem banget',
+  'kamu paket lengkap, cakep + asik banget',
+  'aku suka banget gaya kamu yang santai itu',
+  'kamu tuh selalu bikin aku penasaran',
+  'kamu cantik parah kayak bintang',
+  'kamu punya vibe yang bikin aku jatuh hati lagi',
+  'dasar kamu, bikin aku gemes terus',
+  'kamu bikin semua hal jadi lebih berwarna',
+  'kamu selalu bikin hati aku deg-degan',
+  'senyum kamu tuh bikin aku meleleh',
+  'kamu tuh mood booster aku setiap hari',
+  'kalo lagi sama kamu, waktu berasa cepet banget',
+  'kamu cakep banget pas senyum',
+  'kamu selalu bikin aku penasaran',
+  'kamu emang spesial, nggak ada duanya',
 ];
+
+  function isEmojiCodePoint(cp: number) {
+    return (
+      (cp >= 0x1f300 && cp <= 0x1f5ff) || // Misc Symbols and Pictographs
+      (cp >= 0x1f600 && cp <= 0x1f64f) || // Emoticons
+      (cp >= 0x1f680 && cp <= 0x1f6ff) || // Transport & Map
+      (cp >= 0x2600 && cp <= 0x26ff) || // Misc symbols
+      (cp >= 0x2700 && cp <= 0x27bf) || // Dingbats
+      (cp >= 0x1f900 && cp <= 0x1f9ff) || // Supplemental Symbols and Pictographs
+      (cp >= 0x1fa70 && cp <= 0x1faff) // Symbols and Pictographs Extended-A
+    );
+  }
+
+  function getTrailingEmoji(s: string) {
+    if (!s) return '';
+    const arr = Array.from(s);
+    let i = arr.length - 1;
+    let collected: string[] = [];
+    while (i >= 0) {
+      const ch = arr[i];
+      const cp = ch.codePointAt(0) as number;
+      // treat variation selector and combining marks as part of emoji clusters
+      if (cp === 0xfe0f || (cp >= 0x300 && cp <= 0x36f)) {
+        collected.unshift(ch);
+        i -= 1;
+        continue;
+      }
+      if (isEmojiCodePoint(cp)) {
+        collected.unshift(ch);
+        i -= 1;
+        // also consume any preceding skin tone modifiers (U+1F3FB..U+1F3FF)
+        if (i >= 0) {
+          const prev = Array.from(arr[i])[0];
+          const prevCp = prev ? prev.codePointAt(0) as number : 0;
+          if (prevCp >= 0x1f3fb && prevCp <= 0x1f3ff) {
+            collected.unshift(prev);
+            i -= 1;
+          }
+        }
+        continue;
+      }
+      // stop when character is not emoji nor modifier
+      break;
+    }
+    return collected.join('');
+  }
+
+  function truncateForBubble(s: string, maxChars: number) {
+    if (!s) return s;
+    const arr = Array.from(s);
+    if (arr.length <= maxChars) return s;
+
+    // try to detect trailing emoji(s) so we don't cut them off
+    // match a sequence of pictographic characters (emoji) at the end
+    const trailingEmoji = getTrailingEmoji(s);
+    const emojiLen = trailingEmoji ? Array.from(trailingEmoji).length : 0;
+
+    if (emojiLen > 0) {
+      // Reserve space for the emoji and an ellipsis; make sure headLen >= 1
+      const headLen = Math.max(1, maxChars - emojiLen - 1);
+      const head = arr.slice(0, headLen).join('');
+      return head + '…' + trailingEmoji;
+    }
+
+    return arr.slice(0, Math.max(0, maxChars - 1)).join('') + '…';
+  }
 
 interface BubbleGalleryProps {
   onClose: () => void;
+}
+
+function removeTrailingEmoji(s: string) {
+  if (!s) return s;
+  const trailing = getTrailingEmoji(s);
+  if (!trailing) return s;
+  const arr = Array.from(s);
+  const keep = arr.slice(0, arr.length - Array.from(trailing).length).join('').trim();
+  return keep;
 }
 
 export default function BubbleGallery({ onClose }: BubbleGalleryProps) {
   const [active, setActive] = useState<SpawnedBubble[]>([]);
   const idRef = useRef(1);
   const spawnIntervalRef = useRef<number | null>(null);
-  
 
   useEffect(() => {
-    // initial burst to fill scene
-    for (let i = 0; i < 8; i++) {
-      const word = wordsPool[Math.floor(Math.random() * wordsPool.length)];
-      const b: SpawnedBubble = {
-        id: idRef.current++,
-        word,
-        x: 5 + Math.random() * 90,
-        size: 60 + Math.random() * 100,
-        duration: 10 + Math.random() * 10, // 10-20s
-      };
-      setActive((prev) => [...prev, b]);
-    }
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const settings: BubbleSettings = isMobile
+      ? {
+          initialBurst: 3,
+          intervalMs: 900,
+          maxActive: 18,
+          sizeMin: 50,
+          sizeMax: 100,
+          durationMin: 10,
+          durationMax: 16,
+        }
+      : {
+          initialBurst: 8,
+          intervalMs: 400,
+          maxActive: 120,
+          sizeMin: 60,
+          sizeMax: 160,
+          durationMin: 10,
+          durationMax: 20,
+        };
 
-    // spawn bubbles continuously (more frequent)
-    spawnIntervalRef.current = window.setInterval(() => {
-      const word = wordsPool[Math.floor(Math.random() * wordsPool.length)];
+    const xOffset = isMobile ? 15 : 6;
+    const xRange = isMobile ? 70 : 84;
+      const maxChars = isMobile ? 36 : 60;
+
+    const spawnBubble = () => {
+      const raw = wordsPool[Math.floor(Math.random() * wordsPool.length)];
+      const baseSize = settings.sizeMin + Math.random() * (settings.sizeMax - settings.sizeMin);
+      const cleaned = removeTrailingEmoji(raw);
+
+      // compute dynamic font size to try fit within 2 lines before truncating
+      const maxWidthPx = isMobile ? 160 : 180;
+      const baseFont = Math.max(13, Math.round(baseSize * 0.13));
+      const approxCharWidth = baseFont * 0.55; // rough px per character
+      const charsPerLine = Math.max(6, Math.floor(maxWidthPx / approxCharWidth));
+      const allowedChars = charsPerLine * 2;
+
+      let fontSize = baseFont;
+      let word = cleaned;
+
+      if (Array.from(cleaned).length > allowedChars) {
+        // scale down font to try fit, but not below 11px
+        const scale = Math.max(0.6, allowedChars / Array.from(cleaned).length);
+        fontSize = Math.max(11, Math.floor(baseFont * scale));
+        // if after scaling still too long, truncate to allowedChars
+        if (Array.from(cleaned).length > allowedChars && fontSize <= 11) {
+          word = truncateForBubble(cleaned, allowedChars);
+        }
+      }
+
       const b: SpawnedBubble = {
         id: idRef.current++,
         word,
-        x: 5 + Math.random() * 90,
-        size: 60 + Math.random() * 100,
-        duration: 10 + Math.random() * 10, // 10-20s
+        x: xOffset + Math.random() * xRange,
+        size: baseSize,
+        duration: settings.durationMin + Math.random() * (settings.durationMax - settings.durationMin),
+        fontSize,
       };
       setActive((prev) => {
         const next = [...prev, b];
-        // limit max active bubbles to avoid DOM overload
-        if (next.length > 120) next.shift();
+        if (next.length > settings.maxActive) next.shift();
         return next;
       });
-    }, 400);
+    };
+
+    for (let i = 0; i < settings.initialBurst; i++) {
+      spawnBubble();
+    }
+
+    spawnIntervalRef.current = window.setInterval(() => {
+      spawnBubble();
+    }, settings.intervalMs);
 
     return () => {
       if (spawnIntervalRef.current) clearInterval(spawnIntervalRef.current);
@@ -166,6 +293,7 @@ function FloatingBubble({ bubble, onComplete }: { bubble: SpawnedBubble; onCompl
       style={{
         position: 'absolute',
         left: `${bubble.x}%`,
+        transform: 'translateX(-50%)',
         bottom: -Math.max(20, bubble.size / 2),
         cursor: 'pointer',
         display: 'flex',
@@ -179,7 +307,7 @@ function FloatingBubble({ bubble, onComplete }: { bubble: SpawnedBubble; onCompl
     >
       {/* Floating group: bubble circle + tag */}
       <motion.div
-        initial={{ translateY: 0, opacity: 0 }}
+        initial={isPopping ? { translateY: 0, opacity: 0 } : { translateY: 0, opacity: 1 }}
         animate={isPopping ? { scale: [1, 1.4, 0], opacity: 0, rotate: popRotationRef.current } : { translateY: -travel, opacity: 1 }}
         transition={isPopping ? { times: [0, 0.45, 1], duration: 0.38, ease: 'easeOut' } : { duration: bubble.duration, ease: 'linear' }}
         onAnimationComplete={() => {
@@ -189,7 +317,7 @@ function FloatingBubble({ bubble, onComplete }: { bubble: SpawnedBubble; onCompl
       >
         {/* Sweet word tag (no bubble circle) */}
         <motion.div
-          initial={{ opacity: 0.9, y: 8 }}
+          initial={isPopping ? { opacity: 0.9, y: 8 } : { opacity: 1, y: 0 }}
           animate={isPopping ? { scale: 0.7, opacity: 0, rotate: popRotationRef.current } : { opacity: 1, y: 0 }}
           transition={isPopping ? { duration: 0.28, ease: 'easeOut' } : { delay: 0 }}
           style={{
@@ -197,10 +325,14 @@ function FloatingBubble({ bubble, onComplete }: { bubble: SpawnedBubble; onCompl
             borderRadius: 22,
             padding: '8px 14px',
             fontFamily: "'Caveat', cursive",
-            fontSize: Math.max(13, bubble.size * 0.13),
+            fontSize: bubble.fontSize ?? Math.max(13, bubble.size * 0.13),
             color: '#b04b56',
             boxShadow: '0 6px 18px rgba(176,75,86,0.14)',
-            whiteSpace: 'nowrap',
+            whiteSpace: 'normal',
+            wordBreak: 'normal',
+            overflowWrap: 'normal',
+            textAlign: 'center',
+            lineHeight: 1.2,
             border: '1px solid rgba(176,75,86,0.12)',
             transformOrigin: 'center',
           }}

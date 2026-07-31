@@ -218,7 +218,7 @@ export default function LetterStage({ onReplay }: LetterStageProps) {
                 </p>
 
                 <p>
-                  Aku suka gimana kamu bisa bikin hari yang tadinya buruk jadi agak mendingan cuma dengan senyum atau pesan singkat. Hal-hal kecil itu rasanya besar banget buat aku.
+                  Aku suka gimana kamu bisa bikin hari yang tadinya buruk jadi lebih baik cuma dengan senyum atau pesan singkat. Hal-hal kecil itu rasanya besar banget buat aku.
                 </p>
 
                 <p>
